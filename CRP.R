@@ -1,4 +1,5 @@
 # Loading the packages ----------------------------------------------------
+#Pacman library is a combination of various available packages 
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load("ggplot2", "tidyverse","dplyr", "corrplot","ggcorrplot","Boruta","caret","e1071","randomForest","ROSE","class")
 
