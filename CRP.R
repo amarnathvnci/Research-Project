@@ -90,9 +90,78 @@ rf.predict <- predict(rf.model, test)
 confusionMatrix(test$RATING, rf.predict)
 varImpPlot(rf.model)
 
+#Random forest tuning using caret (source: https://rpubs.com/phamdinhkhanh/389752)
+
+x <- my_df1[,1:20]
+y <- my_df1[,21]
+
+#10 folds repeat 3 times
+control <- trainControl(method='repeatedcv', 
+                        number=10, 
+                        repeats=3)
+#Metric compare model is Accuracy
+metric <- "Accuracy"
+set.seed(123)
+#Number randomely variable selected is mtry
+mtry <- sqrt(ncol(x))
+tunegrid <- expand.grid(.mtry=mtry)
+rf_default <- train(RATING~., 
+                    data=my_df1, 
+                    method='rf', 
+                    metric='Accuracy', 
+                    tuneGrid=tunegrid, 
+                    trControl=control)
+print(rf_default)
 
 
+#Random search
 
+# library(doParallel)
+# cores <- 7
+# registerDoParallel(cores = cores)
+#mtry: Number of random variables collected at each split. In normal equal square number columns.
+mtry <- sqrt(ncol(x))
+#ntree: Number of trees to grow.
+ntree <- 3
+
+
+control <- trainControl(method='repeatedcv', 
+                        number=10, 
+                        repeats=3,
+                        search = 'random')
+
+#Random generate 15 mtry values with tuneLength = 15
+set.seed(1)
+rf_random <- train(RATING ~ .,
+                   data = my_df1,
+                   method = 'rf',
+                   metric = 'Accuracy',
+                   tuneLength  = 15, 
+                   trControl = control)
+print(rf_random)
+
+
+##Bayesian Optimisation for SVM - Obtained highest accuracy of over 91%
+res0 <- svm_cv_opt(data = my_df1,
+                     label = RATING,
+                     svm_kernel = "polynomial",
+                     degree_range = c(2L, 4L),
+                     n_folds = 3,
+                     kappa = 5,
+                     init_points = 4,
+                     n_iter = 5)
+
+#Bayesian optimisation for RF - obtained highest accuracy of over 95%
+res1 <- rf_opt(train_data = train,
+               train_label = RATING,
+               test_data = test,
+               test_label = RATING,
+               mtry_range = c(1L, ncol(train)-1),
+               num_tree = 10L,
+               init_points = 4,
+               n_iter = 5)
+
+###############################  PART 02  ####################################### 
 #Continuous credit rating via Sentiment Analysis
 # Installing packages
 install.packages("tidyverse")
