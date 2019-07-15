@@ -176,6 +176,7 @@ install.packages("caret")
 install.packages("e1071")
 install.packages("randomForest")
 install.packages("RColorBrewer")
+install.packages("sentimentr")
 # Loading Libraries -------------------------------------------------------
 library(tidyverse)
 library(janitor)
@@ -190,6 +191,7 @@ library(caret)
 library(e1071)
 library(randomForest)
 library(RColorBrewer)
+library(sentimentr)
 
 # Reading File -----------------------------------------------------------
 apple <- read.csv("C:/Users/admin/Desktop/Research Project/apple.csv") %>% clean_names()
@@ -292,7 +294,10 @@ grade_words %>%
   labs(title ="Top 10 Significant Words from Bad reviews", x = NULL, y = "tf-idf") +
   coord_flip()
 
-
+#sentiment analysis using sentiment() function
+score <- sentiment(apple$text)
+score1 <- aggregate(sentiment~element_id, data=score, FUN=sum) 
+apple$score <- score1$sentiment
 
 #Sentiment Analysis
 
