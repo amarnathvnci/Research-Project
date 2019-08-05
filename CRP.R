@@ -1,7 +1,7 @@
 # Loading the packages ----------------------------------------------------
-#Pacman library is a combination of various available packages 
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load("ggplot2", "tidyverse","dplyr", "corrplot","ggcorrplot","Boruta","caret","e1071","randomForest","ROSE","class")
+#Pacman library is a combination of various available packages 
+pacman::p_load("ggplot2", "tidyverse","dplyr", "corrplot","ggcorrplot","Boruta","caret","e1071","randomForest","ROSE","class", "mlbench", "MlBayesOpt", "leaps")
 
 # Loading The Dataset -----------------------------------------------------
 credit_rating <- read.csv("C:/Users/admin/Desktop/Research Project/credit.csv")
