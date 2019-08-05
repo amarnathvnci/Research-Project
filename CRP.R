@@ -13,27 +13,8 @@ head(credit_df)  # headers of the file
 str(credit_df)  # Structure of Data
 sapply(credit_df, FUN=function(x) {sum(is.na(x))}) # Missing Values Check
 
-##########Formating Ratings to numeric form ###########
-credit_df$RATING <- as.factor(sapply(credit_df$RATING, FUN = function(x) {if(x == "AAA" | x == "AA+" | x == "AA" | x == "AA-" | 
-                                                                   x == "A+" | x == "A" | x == "A-") {x <- 3} 
-                                                               else if (x == "BBB+" | x == "BBB" | x == "BBB-" | x == "BB+" | x == "BB" | x == "BB-" | 
- x == "B+" | x == "B" | x == "B-") {x <- 2} else if (x == "CCC+" | x == "CCC" | x == "CC+" | x == "CC" | x == "CC-" | 
-                                                        x == "C+" | x == "C" | x == "C-") {x <- 1}}))
-####################################
-#Removing missing values
+#Removing missing values as they are structural missing values
 credit_df <- na.omit(credit_df1)
-#######################################
-
-####Correlation among variables
-
-set.seed(7)
-correlationMatrix <- cor(credit_df[,1:123])
-# summarize the correlation matrix
-print(correlationMatrix)
-# find attributes that are highly corrected (ideally >0.75)
-highlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.5)
-# print indexes of highly correlated attributes
-print(highlyCorrelated)
 ###############################
 
 ##########Formating Ratings to numeric form ###########
@@ -44,9 +25,12 @@ credit_df$RATING <- as.factor(sapply(credit_df$RATING, FUN = function(x) {if(x =
                                                         x == "C+" | x == "C" | x == "C-") {x <- 1}}))
 ####################################
 
+> #######Removing variables other than financial information
+> credit_df <- credit_df[,4:127]
+> credit_df$RATING <- droplevels(credit_df$RATING)
 
 
-#########Variable selection based on importance rate
+#########Variable selection based on importance rate obtained after applying LVQ model
 set.seed(7)
 control <- trainControl(method="repeatedcv", number=10, repeats=3)
 # train the model
@@ -59,12 +43,9 @@ print(importance)
 plot(importance)
 ########################################
 
-#######new variable selection
-credit_df <- credit_df[,4:127]
-credit_df$RATING <- droplevels(credit_df$RATING)
-
-
-
+#########Subsetting dataset with only selected features ############
+credit_rf <- credit_df[,rfname]
+#########################################################
 
 # Model Building ----------------------------------------------------------
 set.seed(123)
@@ -75,6 +56,12 @@ splitIndex2 <- createDataPartition(my_df1$RATING, p=.20, list=FALSE, times=1)
 my_df2 <- as.data.frame(my_df1[splitIndex2, ]) 
 train <- my_df1[splitIndex1, ]
 test <- my_df2[-splitIndex1, ]
+
+# KNN ---------------------------------------------------------------------
+
+knn1 <- knn(train = train, test = test, cl = train$RATING, k = 3)
+confusionMatrix(knn1, test$RATING)
+#######################################
 
 #SVM model
 svm.model <- svm(RATING ~ ., data = train, kernel = "radial", cost = 1, gamma = 0.1)
