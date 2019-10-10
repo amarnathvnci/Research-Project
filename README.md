@@ -1,6 +1,4 @@
-# Research-Project
-This repository has been created as part of my course MSc in FinTech module called "Research Project".
+Research-Project
+Optimisation of Credit rating process via Machine Learning
 
-Name of the student: Amarnath Venkataramanan;
-Student-id: x18105149;
-Course: MSc in FinTech;
+The credit rating process is considered to be one of the vital processes that defences the global economy. The majority of investments will be obtained based on these credit ratings which acts as the representation of the financial credibility of companies. As the current credit rating process found to be expensive, small and medium-sized enterprises(SMEs) which are considered to be the backbone of the global economy might find difficult to access the funds via investment for their development which in turn affects the global economy as well. This issue might be solved with the outcome of this research in terms of the optimised credit rating system with improved accuracy and continuous credit rating transition. Support Vector Machine(SVM) managed to achieve the highest accuracy of 92.0% whereas Random Forest(RF) and C5.0 decision tree also achieved greater accuracies with different formats of the dataset. With the help of dictionary-based sentiment analysis, this research proved that continuous credit rating transition system could track the changes in the financial status of the company which in turn helps to predict the crisis like bankruptcy and default in prior.
